@@ -6,29 +6,56 @@ public class EnemyMovement : MonoBehaviour {
 
     public float speed;
 
+    private GameObject healthBar;
+    private float health = 100;
     private Vector3 endPosition;
     private float angleRot;
     private float angleMove;
     private float sinAngle;
     private float cosAngle;
+    private bool isDead = false;
 
 	// Use this for initialization
 	void Start () {
 
+        healthBar = transform.GetChild(0).gameObject;
+        healthBar.GetComponent<MeshRenderer>().material.color = Color.green;
         angleRot = Random.Range(0, 360);
         angleMove = Mathf.Deg2Rad * angleRot;
         sinAngle = Mathf.Sin(angleMove);
-        Debug.Log("SIN: " + sinAngle);
         cosAngle = Mathf.Cos(angleMove);
-        Debug.Log("COS: " + cosAngle);
-        //transform.rotation = Quaternion.AngleAxis(360 - angle, Vector3.up);
-        transform.Rotate(new Vector3(0, angleRot - 180, 0));
-        //endPosition = new Vector3(Mathf.Cos(angle) * 100, Mathf.Sin(angle) * 100, transform.position.z);
+        transform.Rotate(new Vector3(0, angleRot, 0));
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 
-        transform.position = new Vector3(transform.position.x + sinAngle * speed, transform.position.y , transform.position.z + cosAngle * speed);
+        if (health > 0)
+        {
+            transform.position = new Vector3(transform.position.x + sinAngle * speed, transform.position.y, transform.position.z + cosAngle * speed);
+            Vector2 pos = Camera.main.WorldToScreenPoint(this.transform.position);
+            if (health > 70)
+                healthBar.GetComponent<MeshRenderer>().material.color = Color.green;
+            else if (health <= 70 && health > 30)
+                healthBar.GetComponent<MeshRenderer>().material.color = Color.yellow;
+            else if (health < 30)
+                healthBar.GetComponent<MeshRenderer>().material.color = Color.red;
+        }
+        else
+        {
+            if (!isDead)
+            {
+                GetComponent<Animator>().SetBool("isDead", true);
+                healthBar.GetComponent<MeshRenderer>().material.color = Color.grey;
+                isDead = true;
+                SinglePlayerManager.instance.UpdateScore(5);
+                Destroy(this.gameObject, 1f);              
+            }
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
     }
 }

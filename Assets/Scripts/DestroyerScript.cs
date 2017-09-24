@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class DestroyerScript : MonoBehaviour {
 
+    private GameObject[] enemies;
+
     void OnTriggerEnter(Collider other)
     {
-        Destroy(other.gameObject);
+        if (other.tag != "Player")
+            Destroy(other.gameObject);
     }
 }
