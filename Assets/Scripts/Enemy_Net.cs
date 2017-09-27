@@ -55,6 +55,7 @@ public class Enemy_Net : NetworkBehaviour
 
         if (health <= 0)
         {
+            GetComponent<CapsuleCollider>().enabled = false;
             GetComponent<Animator>().SetBool("isDead", true);
             healthBar.GetComponent<MeshRenderer>().material.color = Color.grey;
             isDead = true;

@@ -45,6 +45,7 @@ public class EnemyMovement : MonoBehaviour {
         {
             if (!isDead)
             {
+                GetComponent<CapsuleCollider>().enabled = false;
                 GetComponent<Animator>().SetBool("isDead", true);
                 healthBar.GetComponent<MeshRenderer>().material.color = Color.grey;
                 isDead = true;
