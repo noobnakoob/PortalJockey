@@ -7,12 +7,15 @@ public class PlayerMovement : MonoBehaviour {
 
     public float moveForce = 5;
     public GameObject missile;
+    public GameObject ac_camera;
     public Transform missilePosition;
 
     Rigidbody myBody;
     private float axisHoriz;
     private float axisVert;
     private float lastAngle = 0;
+    private Vector3 terrainRotation;
+    private float terrainRotationY;
 
 	// Use this for initialization
 	void Start () {
@@ -26,13 +29,18 @@ public class PlayerMovement : MonoBehaviour {
 
         axisHoriz = CrossPlatformInputManager.GetAxis("Horizontal");
         axisVert = CrossPlatformInputManager.GetAxis("Vertical");
+        
+        terrainRotation = ac_camera.transform.rotation.eulerAngles;
+        terrainRotationY =(terrainRotation.y - terrainRotation.z + terrainRotation.x);
 
-        float angle = -Mathf.Rad2Deg * Mathf.Atan2(axisVert, axisHoriz);
+
+
+        float angle = -Mathf.Rad2Deg * Mathf.Atan2(axisVert, axisHoriz) + terrainRotationY;
         
         if (!(Mathf.Abs(axisHoriz) < 0.1f && Mathf.Abs(axisVert) < 0.1f))
         {
             transform.rotation = Quaternion.Euler(0, angle, 0);            
-            lastAngle = angle;
+            lastAngle = angle ;
         }
 
         if (!(Mathf.Abs(axisHoriz) < 0.5f && Mathf.Abs(axisVert) < 0.5f))

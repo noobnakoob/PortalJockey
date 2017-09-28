@@ -15,6 +15,10 @@ public class PlayerMovement_Net : NetworkBehaviour
     private float axisVert;
     private float lastAngle = 0;
 
+
+    private Vector3 terrainRotation;
+    private float terrainRotationY;
+
     // Use this for initialization
     void Start()
     {
@@ -35,7 +39,10 @@ public class PlayerMovement_Net : NetworkBehaviour
         axisHoriz = CrossPlatformInputManager.GetAxis("Horizontal");
         axisVert = CrossPlatformInputManager.GetAxis("Vertical");
 
-        float angle = -Mathf.Rad2Deg * Mathf.Atan2(axisVert, axisHoriz);
+        terrainRotation = GameObject.Find("ARCamera").transform.rotation.eulerAngles;
+        terrainRotationY = (terrainRotation.y - terrainRotation.z + terrainRotation.x);
+
+        float angle = -Mathf.Rad2Deg * Mathf.Atan2(axisVert, axisHoriz) + terrainRotationY;
 
         if (!(Mathf.Abs(axisHoriz) < 0.1f && Mathf.Abs(axisVert) < 0.1f))
         {
