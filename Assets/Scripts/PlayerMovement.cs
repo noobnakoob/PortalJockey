@@ -33,15 +33,9 @@ public class PlayerMovement : MonoBehaviour {
         terrainRotation = ac_camera.transform.rotation.eulerAngles;
         terrainRotationY =(terrainRotation.y - terrainRotation.z + terrainRotation.x);
 
-
-
         float angle = -Mathf.Rad2Deg * Mathf.Atan2(axisVert, axisHoriz) + terrainRotationY;
-        
-        if (!(Mathf.Abs(axisHoriz) < 0.1f && Mathf.Abs(axisVert) < 0.1f))
-        {
-            transform.rotation = Quaternion.Euler(0, angle, 0);            
-            lastAngle = angle ;
-        }
+        transform.rotation = Quaternion.Euler(0, terrainRotation.y, 0);
+        lastAngle = terrainRotation.y;
 
         if (!(Mathf.Abs(axisHoriz) < 0.5f && Mathf.Abs(axisVert) < 0.5f))
         {

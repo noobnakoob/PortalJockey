@@ -29,13 +29,11 @@ public class PlayerMovement_Net : NetworkBehaviour
         }
 
         myBody = GetComponent<Rigidbody>();
-        //InvokeRepeating("SpawnMissile", 1f, 0.5f);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-
         axisHoriz = CrossPlatformInputManager.GetAxis("Horizontal");
         axisVert = CrossPlatformInputManager.GetAxis("Vertical");
 
@@ -43,12 +41,8 @@ public class PlayerMovement_Net : NetworkBehaviour
         terrainRotationY = (terrainRotation.y - terrainRotation.z + terrainRotation.x);
 
         float angle = -Mathf.Rad2Deg * Mathf.Atan2(axisVert, axisHoriz) + terrainRotationY;
-
-        if (!(Mathf.Abs(axisHoriz) < 0.1f && Mathf.Abs(axisVert) < 0.1f))
-        {
-            transform.rotation = Quaternion.Euler(0, angle, 0);
-            lastAngle = angle;
-        }
+        transform.rotation = Quaternion.Euler(0, terrainRotation.y, 0);
+        lastAngle = terrainRotation.y;
 
         if (!(Mathf.Abs(axisHoriz) < 0.5f && Mathf.Abs(axisVert) < 0.5f))
         {
@@ -56,10 +50,4 @@ public class PlayerMovement_Net : NetworkBehaviour
             myBody.AddForce(Vector3.right * Mathf.Sin(angle * Mathf.Deg2Rad) * moveForce * Mathf.Abs(axisVert));
         }
     }
-
-    //private void SpawnMissile()
-    //{
-    //    GameObject temp = Instantiate(missile, missilePosition.position, missile.transform.rotation) as GameObject;
-    //    temp.GetComponent<MissileMovement>().rotY = lastAngle;
-    //}
 }
